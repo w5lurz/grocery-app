@@ -5,17 +5,25 @@ import type { GroceryItem } from '../types';
 import { generateId } from '../utils';
 
 const GROCERIES_PATH = 'groceries';
+const CACHE_KEY = 'grocery-items-cache';
+
+function readCache(): GroceryItem[] {
+	const cached = localStorage.getItem(CACHE_KEY);
+	return cached ? (JSON.parse(cached) as GroceryItem[]) : [];
+}
 
 export function useGroceryItems() {
-	const [items, setItems] = useState<GroceryItem[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [items, setItems] = useState<GroceryItem[]>(readCache);
+	const [loading, setLoading] = useState(() => items.length === 0);
 
 	useEffect(() => {
 		const groceriesRef = ref(db, GROCERIES_PATH);
 		const unsubscribe = onValue(groceriesRef, (snapshot) => {
 			const value = snapshot.val() as Record<string, GroceryItem> | null;
-			setItems(value ? Object.values(value) : []);
+			const nextItems = value ? Object.values(value) : [];
+			setItems(nextItems);
 			setLoading(false);
+			localStorage.setItem(CACHE_KEY, JSON.stringify(nextItems));
 		});
 		return () => unsubscribe();
 	}, []);
