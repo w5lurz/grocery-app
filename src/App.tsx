@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import BevasPage from './pages/BevasPage';
+import GroceriesPage from './pages/GroceriesPage';
 import type { User } from './types';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 				isDark={isDark}
 				onThemeToggle={() => setIsDark((prev) => !prev)}
 			/>
-			<BevasPage currentUser={currentUser} />
+			<GroceriesPage currentUser={currentUser} />
 		</div>
 	);
 }
