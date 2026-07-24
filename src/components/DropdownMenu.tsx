@@ -12,10 +12,18 @@ type DropdownMenuProps<T extends string> = {
 	value: T;
 	options: DropdownMenuOption<T>[];
 	onChange: (value: T) => void;
+	align?: 'left' | 'right';
 	'aria-label'?: string;
 };
 
-function DropdownMenu<T extends string>({ trigger, value, options, onChange, 'aria-label': ariaLabel }: DropdownMenuProps<T>) {
+function DropdownMenu<T extends string>({
+	trigger,
+	value,
+	options,
+	onChange,
+	align = 'right',
+	'aria-label': ariaLabel,
+}: DropdownMenuProps<T>) {
 	const [isOpen, setIsOpen] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +61,9 @@ function DropdownMenu<T extends string>({ trigger, value, options, onChange, 'ar
 			{isOpen && (
 				<ul
 					role="menu"
-					className="absolute right-0 z-10 mt-1 min-w-[10rem] rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+					className={`absolute z-10 mt-1 min-w-40 rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900 ${
+						align === 'left' ? 'left-0' : 'right-0'
+					}`}
 				>
 					{options.map((option) => (
 						<li key={option.value} role="none">
