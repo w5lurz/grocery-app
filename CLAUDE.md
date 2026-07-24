@@ -20,6 +20,7 @@ There should be a set of reusable components located inside src/components, ALWA
 - `npm run dev` — start the dev server
 - `npm run build` — production build
 - `npm run lint` — run eslint
+- `npm run deploy` — build and deploy to Firebase Hosting
 
 ## Language
 
@@ -48,6 +49,7 @@ Adjust as the real Firebase schema solidifies — treat this as a starting point
 
 - Realtime Database is the source of truth; UI should stay in sync via listeners rather than one-off fetches.
 - Firebase config/keys must come from environment variables (`.env`, gitignored) — never hardcode or commit them.
+- Hosted on Firebase Hosting (site: `julcsi-tamas-household`), deployed from `master` via GitHub Actions on every merge.
 
 ## Styling
 

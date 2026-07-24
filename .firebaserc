@@ -1,0 +1,12 @@
+{
+	"projects": {
+		"default": "grocery-app-2572b"
+	},
+	"targets": {
+		"grocery-app-2572b": {
+			"hosting": {
+				"julcsi-tamas-household": ["julcsi-tamas-household"]
+			}
+		}
+	}
+}
