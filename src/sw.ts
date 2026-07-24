@@ -21,8 +21,8 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 onBackgroundMessage(messaging, (payload) => {
-	const title = payload.notification?.title ?? 'Bevás';
-	const body = payload.notification?.body;
+	const title = payload.data?.title ?? 'Bevás';
+	const body = payload.data?.body;
 	void self.registration.showNotification(title, {
 		body,
 		icon: '/pwa-192.png',

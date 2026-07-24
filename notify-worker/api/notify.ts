@@ -39,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 	}
 
 	try {
-		await getMessaging().send({ token, notification: { title, body } });
+		await getMessaging().send({ token, data: { title, body } });
 		res.status(200).json({ ok: true });
 	} catch (error) {
 		res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
