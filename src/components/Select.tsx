@@ -48,7 +48,7 @@ function Select<T extends string>({ value, onChange, options, 'aria-label': aria
 				aria-haspopup="listbox"
 				aria-expanded={isOpen}
 				onClick={() => setIsOpen((prev) => !prev)}
-				className="flex w-full items-center gap-2 rounded-md border border-gray-300 bg-white py-1.5 pr-9 pl-2 text-left text-sm text-gray-700 focus:border-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+				className="flex w-full items-center gap-2 cursor-pointer rounded-md border border-gray-300 bg-white py-1.5 pr-9 pl-2 text-left text-sm text-gray-700 focus:border-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
 			>
 				{selected?.icon && <span className="h-4 w-4 shrink-0 [&>svg]:h-4 [&>svg]:w-4">{selected.icon}</span>}
 				<span className="truncate">{selected?.label}</span>
@@ -74,13 +74,15 @@ function Select<T extends string>({ value, onChange, options, 'aria-label': aria
 									onChange(option.value);
 									setIsOpen(false);
 								}}
-								className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 ${
+								className={`flex w-full items-center cursor-pointer gap-2 px-3 py-1.5 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 ${
 									option.value === value
 										? 'font-semibold text-purple-600 dark:text-purple-400'
 										: 'text-gray-700 dark:text-gray-200'
 								}`}
 							>
-								{option.icon && <span className="h-4 w-4 shrink-0 [&>svg]:h-4 [&>svg]:w-4">{option.icon}</span>}
+								{option.icon && (
+									<span className="h-4 w-4 shrink-0 [&>svg]:h-4 [&>svg]:w-4">{option.icon}</span>
+								)}
 								{option.label}
 							</button>
 						</li>
