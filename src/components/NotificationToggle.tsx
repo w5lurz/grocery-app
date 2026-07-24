@@ -9,7 +9,7 @@ type NotificationToggleProps = {
 function NotificationToggle({ permission, onRequest }: NotificationToggleProps) {
 	if (permission === 'granted') {
 		return (
-			<span className="p-1.5 text-gray-400 dark:text-gray-500" title="Értesítések engedélyezve">
+			<span className="p-1.5 cursor-pointer text-gray-400 dark:text-gray-500" title="Értesítések engedélyezve">
 				<BellIcon className="h-5 w-5" />
 			</span>
 		);
@@ -17,7 +17,10 @@ function NotificationToggle({ permission, onRequest }: NotificationToggleProps) 
 
 	if (permission === 'denied') {
 		return (
-			<span className="p-1.5 text-gray-300 dark:text-gray-600" title="Értesítések letiltva a böngészőben">
+			<span
+				className="p-1.5 cursor-pointer text-gray-300 dark:text-gray-600"
+				title="Értesítések letiltva a böngészőben"
+			>
 				<BellSlashIcon className="h-5 w-5" />
 			</span>
 		);
