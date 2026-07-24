@@ -10,6 +10,7 @@ import TodoItemForm from '../components/TodoItemForm';
 import TodoItemRow from '../components/TodoItemRow';
 import type { TodoItemFormValues } from '../components/TodoItemForm';
 import { useTodoItems } from '../hooks/useTodoItems';
+import { notifyOtherUser } from '../notify';
 
 type TodoItemGroup = {
 	key: string;
@@ -50,6 +51,7 @@ function TodoPage({ currentUser }: TodoPageProps) {
 			addedBy: currentUser,
 			lastEditedBy: currentUser,
 		});
+		void notifyOtherUser(currentUser, 'Todo', `${currentUser} hozzáadta: ${values.text}`);
 		setIsAdding(false);
 	};
 
@@ -62,6 +64,9 @@ function TodoPage({ currentUser }: TodoPageProps) {
 		const item = items.find((item) => item.id === id);
 		if (!item) return;
 		editItem(id, { done: !item.done });
+		if (!item.done) {
+			void notifyOtherUser(currentUser, 'Todo', `${currentUser} kipipálta: ${item.text}`);
+		}
 	};
 
 	const handleDeleteRequest = (id: string) => {

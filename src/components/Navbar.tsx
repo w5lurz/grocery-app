@@ -3,6 +3,7 @@ import { PAGES } from '../types';
 import MenuItem from './MenuItem';
 import Chip from './Chip';
 import ThemeToggle from './ThemeToggle';
+import NotificationToggle from './NotificationToggle';
 
 type NavbarProps = {
 	currentUser: User;
@@ -11,11 +12,22 @@ type NavbarProps = {
 	onPageChange: (page: Page) => void;
 	isDark: boolean;
 	onThemeToggle: () => void;
+	notificationPermission: NotificationPermission;
+	onRequestNotifications: () => void;
 };
 
 const USERS: User[] = ['Julcsi', 'Tamás'];
 
-function Navbar({ currentUser, onUserChange, activePage, onPageChange, isDark, onThemeToggle }: NavbarProps) {
+function Navbar({
+	currentUser,
+	onUserChange,
+	activePage,
+	onPageChange,
+	isDark,
+	onThemeToggle,
+	notificationPermission,
+	onRequestNotifications,
+}: NavbarProps) {
 	return (
 		<nav className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900">
 			<div className="flex items-center gap-2">
@@ -32,6 +44,7 @@ function Navbar({ currentUser, onUserChange, activePage, onPageChange, isDark, o
 				{USERS.map((user) => (
 					<Chip key={user} label={user} selected={currentUser === user} onClick={() => onUserChange(user)} />
 				))}
+				<NotificationToggle permission={notificationPermission} onRequest={onRequestNotifications} />
 				<ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
 			</div>
 		</nav>
