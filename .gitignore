@@ -29,3 +29,8 @@ firebase-debug.log
 *.njsproj
 *.sln
 *.sw?
+
+# Agent skills
+.claude
+.agents
+skills-lock.json
