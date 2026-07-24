@@ -37,12 +37,14 @@ function GroceryItemRow({ item, onToggleDone, onEdit, onDelete }: GroceryItemRow
 			</span>
 			<Badge label={item.category} tone={CATEGORY_TONES[item.category]} icon={CATEGORY_ICONS[item.category]} />
 			<Badge label={PRIORITY_LABELS[item.priority]} tone={item.priority} icon={PRIORITY_ICONS[item.priority]} />
-			<Button variant="icon" aria-label="Szerkesztés" onClick={onEdit}>
-				<PencilIcon className="h-4 w-4" />
-			</Button>
-			<Button variant="icon" aria-label="Törlés" onClick={onDelete}>
-				<TrashIcon className="h-4 w-4" />
-			</Button>
+			<div className="flex gap-1">
+				<Button variant="icon" aria-label="Szerkesztés" onClick={onEdit}>
+					<PencilIcon className="h-4 w-4" />
+				</Button>
+				<Button variant="icon" aria-label="Törlés" onClick={onDelete}>
+					<TrashIcon className="h-4 w-4" />
+				</Button>
+			</div>
 		</li>
 	);
 }
