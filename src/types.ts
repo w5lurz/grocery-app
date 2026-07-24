@@ -42,3 +42,31 @@ export const SORT_OPTIONS: { value: SortBy; label: string }[] = [
 	{ value: 'category', label: 'Kategória szerint' },
 	{ value: 'priority', label: 'Prioritás szerint' },
 ];
+
+export type TodoCategory = 'Ház' | 'Kert' | 'Autó';
+
+export const TODO_CATEGORIES: TodoCategory[] = ['Ház', 'Kert', 'Autó'];
+
+export type TodoItem = {
+	id: string;
+	text: string;
+	category: TodoCategory;
+	done: boolean;
+	createdAt: number;
+	addedBy: User;
+	lastEditedBy: User;
+};
+
+export type TodoSortBy = 'default' | 'category';
+
+export const TODO_SORT_OPTIONS: { value: TodoSortBy; label: string }[] = [
+	{ value: 'default', label: 'Alapértelmezett' },
+	{ value: 'category', label: 'Kategória szerint' },
+];
+
+export type Page = 'groceries' | 'todo';
+
+export const PAGES: { value: Page; label: string }[] = [
+	{ value: 'groceries', label: 'Bevás' },
+	{ value: 'todo', label: 'Todo' },
+];

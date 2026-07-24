@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import GroceriesPage from './pages/GroceriesPage';
-import type { User } from './types';
+import TodoPage from './pages/TodoPage';
+import type { Page, User } from './types';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<User>('Tamás');
+	const [activePage, setActivePage] = useState<Page>('groceries');
 	const [isDark, setIsDark] = useState(true);
 
 	useEffect(() => {
@@ -16,10 +18,16 @@ function App() {
 			<Navbar
 				currentUser={currentUser}
 				onUserChange={setCurrentUser}
+				activePage={activePage}
+				onPageChange={setActivePage}
 				isDark={isDark}
 				onThemeToggle={() => setIsDark((prev) => !prev)}
 			/>
-			<GroceriesPage currentUser={currentUser} />
+			{activePage === 'groceries' ? (
+				<GroceriesPage currentUser={currentUser} />
+			) : (
+				<TodoPage currentUser={currentUser} />
+			)}
 		</div>
 	);
 }
