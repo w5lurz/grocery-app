@@ -13,7 +13,7 @@ function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
 			aria-checked={isDark}
 			aria-label="Sötét/világos mód váltása"
 			onClick={onToggle}
-			className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+			className={`relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors ${
 				isDark ? 'bg-purple-600' : 'bg-gray-300'
 			}`}
 		>

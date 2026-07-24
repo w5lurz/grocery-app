@@ -1,0 +1,154 @@
+import { useState } from 'react';
+import { PlusIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import type { GroceryItem, Priority, SortBy, User } from '../types';
+import { CATEGORIES, PRIORITY_LABELS, SORT_OPTIONS } from '../types';
+import Button from '../components/Button';
+import Modal from '../components/Modal';
+import DropdownMenu from '../components/DropdownMenu';
+import GroceryItemForm from '../components/GroceryItemForm';
+import GroceryItemRow from '../components/GroceryItemRow';
+import type { GroceryItemFormValues } from '../components/GroceryItemForm';
+import { generateId } from '../utils';
+
+const PRIORITIES_BY_ORDER: Priority[] = ['high', 'medium', 'low'];
+
+type GroceryItemGroup = {
+	key: string;
+	label: string | null;
+	items: GroceryItem[];
+};
+
+function groupItems(items: GroceryItem[], sortBy: SortBy): GroceryItemGroup[] {
+	if (sortBy === 'category') {
+		return CATEGORIES.map((category) => ({
+			key: category,
+			label: category,
+			items: items.filter((item) => item.category === category),
+		})).filter((group) => group.items.length > 0);
+	}
+	if (sortBy === 'priority') {
+		return PRIORITIES_BY_ORDER.map((priority) => ({
+			key: priority,
+			label: PRIORITY_LABELS[priority],
+			items: items.filter((item) => item.priority === priority),
+		})).filter((group) => group.items.length > 0);
+	}
+	return [{ key: 'default', label: null, items }];
+}
+
+type BevasPageProps = {
+	currentUser: User;
+};
+
+function BevasPage({ currentUser }: BevasPageProps) {
+	const [items, setItems] = useState<GroceryItem[]>([]);
+	const [isAdding, setIsAdding] = useState(false);
+	const [editingId, setEditingId] = useState<string | null>(null);
+	const [sortBy, setSortBy] = useState<SortBy>('default');
+	console.log('ITEMS123', items);
+	const editingItem = items.find((item) => item.id === editingId) ?? null;
+	const groups = groupItems(items, sortBy);
+
+	const handleAdd = (values: GroceryItemFormValues) => {
+		const newItem: GroceryItem = {
+			id: generateId(),
+			done: false,
+			createdAt: Date.now(),
+			addedBy: currentUser,
+			lastEditedBy: currentUser,
+			...values,
+		};
+		setItems((prev) => [...prev, newItem]);
+		setIsAdding(false);
+	};
+
+	const handleEdit = (id: string, values: GroceryItemFormValues) => {
+		setItems((prev) =>
+			prev.map((item) => (item.id === id ? { ...item, ...values, lastEditedBy: currentUser } : item)),
+		);
+		setEditingId(null);
+	};
+
+	const handleToggleDone = (id: string) => {
+		setItems((prev) => prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item)));
+	};
+
+	const handleDelete = (id: string) => {
+		setItems((prev) => prev.filter((item) => item.id !== id));
+	};
+
+	return (
+		<div className="mx-auto max-w-2xl p-4">
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Bevás</h1>
+				<div className="flex items-center gap-2">
+					<DropdownMenu
+						trigger={<AdjustmentsHorizontalIcon className="h-5 w-5" />}
+						value={sortBy}
+						options={SORT_OPTIONS}
+						onChange={setSortBy}
+						aria-label="Rendezés"
+					/>
+					<Button variant="primary" onClick={() => setIsAdding(true)}>
+						<PlusIcon className="h-4 w-4" />
+						Új
+					</Button>
+				</div>
+			</div>
+			<ul className="rounded-md border border-gray-200 dark:border-gray-700">
+				{groups.map((group, index) => (
+					<li key={group.key} className={index > 0 ? 'border-t-4 border-gray-100 dark:border-gray-800' : ''}>
+						{group.label && (
+							<div className="bg-gray-50 px-3 py-1.5 text-xs font-semibold tracking-wide text-gray-500 uppercase dark:bg-gray-800/60 dark:text-gray-400">
+								{group.label}
+							</div>
+						)}
+						<ul>
+							{group.items.map((item) => (
+								<GroceryItemRow
+									key={item.id}
+									item={item}
+									onToggleDone={() => handleToggleDone(item.id)}
+									onEdit={() => setEditingId(item.id)}
+									onDelete={() => handleDelete(item.id)}
+								/>
+							))}
+						</ul>
+					</li>
+				))}
+				{items.length === 0 && (
+					<li className="px-3 py-6 text-center text-sm text-gray-400 dark:text-gray-500">Nincs még tétel</li>
+				)}
+			</ul>
+
+			{isAdding && (
+				<Modal title="Új tétel" onClose={() => setIsAdding(false)}>
+					<GroceryItemForm
+						submitLabel="Hozzáad"
+						existingNames={items.map((item) => item.name)}
+						onSubmit={handleAdd}
+						onCancel={() => setIsAdding(false)}
+					/>
+				</Modal>
+			)}
+
+			{editingItem && (
+				<Modal title="Tétel szerkesztése" onClose={() => setEditingId(null)}>
+					<GroceryItemForm
+						initialValues={{
+							name: editingItem.name,
+							category: editingItem.category,
+							priority: editingItem.priority,
+						}}
+						submitLabel="Mentés"
+						existingNames={items.filter((item) => item.id !== editingItem.id).map((item) => item.name)}
+						onSubmit={(values) => handleEdit(editingItem.id, values)}
+						onCancel={() => setEditingId(null)}
+					/>
+				</Modal>
+			)}
+		</div>
+	);
+}
+
+export default BevasPage;
