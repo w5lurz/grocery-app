@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { Category, Priority } from '../types';
 import { CATEGORIES, PRIORITY_OPTIONS } from '../types';
+import { CATEGORY_ICONS, PRIORITY_ICONS } from '../icons';
 import Select from './Select';
 import Button from './Button';
 
@@ -19,7 +20,16 @@ type GroceryItemFormProps = {
 	onCancel: () => void;
 };
 
-const CATEGORY_OPTIONS = CATEGORIES.map((category) => ({ value: category, label: category }));
+const CATEGORY_OPTIONS = CATEGORIES.map((category) => ({
+	value: category,
+	label: category,
+	icon: CATEGORY_ICONS[category],
+}));
+
+const PRIORITY_SELECT_OPTIONS = PRIORITY_OPTIONS.map((option) => ({
+	...option,
+	icon: PRIORITY_ICONS[option.value],
+}));
 
 function GroceryItemForm({ initialValues, submitLabel, existingNames, onSubmit, onCancel }: GroceryItemFormProps) {
 	const [name, setName] = useState(initialValues?.name ?? '');
@@ -53,27 +63,32 @@ function GroceryItemForm({ initialValues, submitLabel, existingNames, onSubmit, 
 
 	return (
 		<div className="flex flex-col gap-3">
-			<div className="flex flex-wrap items-center gap-2">
+			<input
+				type="text"
+				value={name}
+				onChange={(event) => handleNameChange(event.target.value)}
+				onKeyDown={handleKeyDown}
+				placeholder="Tétel neve"
+				autoFocus
+				className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-base text-gray-900 focus:border-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+			/>
+			<div className="grid grid-cols-2 gap-2">
 				<Select value={category} onChange={setCategory} options={CATEGORY_OPTIONS} aria-label="Kategória" />
-				<Select value={priority} onChange={setPriority} options={PRIORITY_OPTIONS} aria-label="Prioritás" />
-				<input
-					type="text"
-					value={name}
-					onChange={(event) => handleNameChange(event.target.value)}
-					onKeyDown={handleKeyDown}
-					placeholder="Tétel neve"
-					autoFocus
-					className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-base text-gray-900 focus:border-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+				<Select
+					value={priority}
+					onChange={setPriority}
+					options={PRIORITY_SELECT_OPTIONS}
+					aria-label="Prioritás"
 				/>
-				{error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-				<div className="ml-auto flex gap-2">
-					<Button variant="secondary" onClick={onCancel}>
-						Mégse
-					</Button>
-					<Button variant="primary" disabled={!isValid} onClick={handleSubmit}>
-						{submitLabel}
-					</Button>
-				</div>
+			</div>
+			{error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+			<div className="flex justify-end gap-2">
+				<Button variant="secondary" onClick={onCancel}>
+					Mégse
+				</Button>
+				<Button variant="primary" disabled={!isValid} onClick={handleSubmit}>
+					{submitLabel}
+				</Button>
 			</div>
 		</div>
 	);

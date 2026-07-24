@@ -110,7 +110,7 @@ function GroceriesPage({ currentUser }: GroceriesPageProps) {
 				{groups.map((group, index) => (
 					<li key={group.key} className={index > 0 ? 'border-t-4 border-gray-100 dark:border-gray-800' : ''}>
 						{group.label && (
-							<div className="bg-gray-50 px-3 py-1.5 text-xs font-semibold tracking-wide text-gray-500 uppercase dark:bg-gray-800/60 dark:text-gray-400">
+							<div className="bg-gray-200 px-3 py-1.5 text-xs font-semibold tracking-wide text-gray-500 uppercase dark:bg-gray-800/60 dark:text-gray-400">
 								{group.label}
 							</div>
 						)}
