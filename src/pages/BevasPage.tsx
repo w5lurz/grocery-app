@@ -8,7 +8,7 @@ import DropdownMenu from '../components/DropdownMenu';
 import GroceryItemForm from '../components/GroceryItemForm';
 import GroceryItemRow from '../components/GroceryItemRow';
 import type { GroceryItemFormValues } from '../components/GroceryItemForm';
-import { generateId } from '../utils';
+import { useGroceryItems } from '../hooks/useGroceryItems';
 
 const PRIORITIES_BY_ORDER: Priority[] = ['high', 'medium', 'low'];
 
@@ -41,40 +41,37 @@ type BevasPageProps = {
 };
 
 function BevasPage({ currentUser }: BevasPageProps) {
-	const [items, setItems] = useState<GroceryItem[]>([]);
+	const { items, loading, addItem, editItem, deleteItem } = useGroceryItems();
 	const [isAdding, setIsAdding] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [sortBy, setSortBy] = useState<SortBy>('default');
-	console.log('ITEMS123', items);
 	const editingItem = items.find((item) => item.id === editingId) ?? null;
 	const groups = groupItems(items, sortBy);
 
 	const handleAdd = (values: GroceryItemFormValues) => {
-		const newItem: GroceryItem = {
-			id: generateId(),
+		addItem({
+			...values,
 			done: false,
 			createdAt: Date.now(),
 			addedBy: currentUser,
 			lastEditedBy: currentUser,
-			...values,
-		};
-		setItems((prev) => [...prev, newItem]);
+		});
 		setIsAdding(false);
 	};
 
 	const handleEdit = (id: string, values: GroceryItemFormValues) => {
-		setItems((prev) =>
-			prev.map((item) => (item.id === id ? { ...item, ...values, lastEditedBy: currentUser } : item)),
-		);
+		editItem(id, { ...values, lastEditedBy: currentUser });
 		setEditingId(null);
 	};
 
 	const handleToggleDone = (id: string) => {
-		setItems((prev) => prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item)));
+		const item = items.find((item) => item.id === id);
+		if (!item) return;
+		editItem(id, { done: !item.done });
 	};
 
 	const handleDelete = (id: string) => {
-		setItems((prev) => prev.filter((item) => item.id !== id));
+		deleteItem(id);
 	};
 
 	return (
@@ -117,7 +114,9 @@ function BevasPage({ currentUser }: BevasPageProps) {
 					</li>
 				))}
 				{items.length === 0 && (
-					<li className="px-3 py-6 text-center text-sm text-gray-400 dark:text-gray-500">Nincs még tétel</li>
+					<li className="px-3 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
+						{loading ? 'Betöltés…' : 'Nincs még tétel'}
+					</li>
 				)}
 			</ul>
 
