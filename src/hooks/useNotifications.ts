@@ -31,8 +31,6 @@ export function useNotifications(currentUser: User) {
 	}, [currentUser, permission]);
 
 	const requestPermission = async () => {
-		const supported = await isSupported();
-		if (!supported) return;
 		const result = await Notification.requestPermission();
 		setPermission(result);
 	};
