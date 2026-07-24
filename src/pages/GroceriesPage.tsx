@@ -4,11 +4,12 @@ import type { GroceryItem, Priority, SortBy, User } from '../types';
 import { CATEGORIES, PRIORITY_LABELS, SORT_OPTIONS } from '../types';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
 import DropdownMenu from '../components/DropdownMenu';
 import GroceryItemForm from '../components/GroceryItemForm';
 import GroceryItemRow from '../components/GroceryItemRow';
 import type { GroceryItemFormValues } from '../components/GroceryItemForm';
-import { generateId } from '../utils';
+import { useGroceryItems } from '../hooks/useGroceryItems';
 
 const PRIORITIES_BY_ORDER: Priority[] = ['high', 'medium', 'low'];
 
@@ -36,45 +37,55 @@ function groupItems(items: GroceryItem[], sortBy: SortBy): GroceryItemGroup[] {
 	return [{ key: 'default', label: null, items }];
 }
 
-type BevasPageProps = {
+type GroceriesPageProps = {
 	currentUser: User;
 };
 
-function BevasPage({ currentUser }: BevasPageProps) {
-	const [items, setItems] = useState<GroceryItem[]>([]);
+function GroceriesPage({ currentUser }: GroceriesPageProps) {
+	const { items, loading, addItem, editItem, deleteItem } = useGroceryItems();
 	const [isAdding, setIsAdding] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
-	const [sortBy, setSortBy] = useState<SortBy>('default');
-	console.log('ITEMS123', items);
+	const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+	const [sortBy, setSortBy] = useState<SortBy>('category');
 	const editingItem = items.find((item) => item.id === editingId) ?? null;
+	const pendingDeleteItem = items.find((item) => item.id === pendingDeleteId) ?? null;
 	const groups = groupItems(items, sortBy);
 
 	const handleAdd = (values: GroceryItemFormValues) => {
-		const newItem: GroceryItem = {
-			id: generateId(),
+		addItem({
+			...values,
 			done: false,
 			createdAt: Date.now(),
 			addedBy: currentUser,
 			lastEditedBy: currentUser,
-			...values,
-		};
-		setItems((prev) => [...prev, newItem]);
+		});
 		setIsAdding(false);
 	};
 
 	const handleEdit = (id: string, values: GroceryItemFormValues) => {
-		setItems((prev) =>
-			prev.map((item) => (item.id === id ? { ...item, ...values, lastEditedBy: currentUser } : item)),
-		);
+		editItem(id, { ...values, lastEditedBy: currentUser });
 		setEditingId(null);
 	};
 
 	const handleToggleDone = (id: string) => {
-		setItems((prev) => prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item)));
+		const item = items.find((item) => item.id === id);
+		if (!item) return;
+		editItem(id, { done: !item.done });
 	};
 
-	const handleDelete = (id: string) => {
-		setItems((prev) => prev.filter((item) => item.id !== id));
+	const handleDeleteRequest = (id: string) => {
+		const item = items.find((item) => item.id === id);
+		if (!item) return;
+		if (item.done) {
+			deleteItem(id);
+			return;
+		}
+		setPendingDeleteId(id);
+	};
+
+	const handleConfirmDelete = () => {
+		if (pendingDeleteId) deleteItem(pendingDeleteId);
+		setPendingDeleteId(null);
 	};
 
 	return (
@@ -110,14 +121,16 @@ function BevasPage({ currentUser }: BevasPageProps) {
 									item={item}
 									onToggleDone={() => handleToggleDone(item.id)}
 									onEdit={() => setEditingId(item.id)}
-									onDelete={() => handleDelete(item.id)}
+									onDelete={() => handleDeleteRequest(item.id)}
 								/>
 							))}
 						</ul>
 					</li>
 				))}
 				{items.length === 0 && (
-					<li className="px-3 py-6 text-center text-sm text-gray-400 dark:text-gray-500">Nincs még tétel</li>
+					<li className="px-3 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
+						{loading ? 'Betöltés…' : 'Nincs még tétel'}
+					</li>
 				)}
 			</ul>
 
@@ -147,8 +160,19 @@ function BevasPage({ currentUser }: BevasPageProps) {
 					/>
 				</Modal>
 			)}
+
+			{pendingDeleteItem && (
+				<ConfirmDialog
+					title="Törlés megerősítése"
+					message="Tutkó törlöd diló? Még meg sincs véve."
+					confirmLabel="Törlés"
+					cancelLabel="Mégse"
+					onConfirm={handleConfirmDelete}
+					onCancel={() => setPendingDeleteId(null)}
+				/>
+			)}
 		</div>
 	);
 }
 
-export default BevasPage;
+export default GroceriesPage;
