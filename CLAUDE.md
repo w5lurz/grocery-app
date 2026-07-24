@@ -19,7 +19,7 @@ There should be a set of reusable components located inside src/components, ALWA
 
 - `npm run dev` — start the dev server
 - `npm run build` — production build
-- `npm run lint` — run oxlint
+- `npm run lint` — run eslint
 
 ## Language
 
