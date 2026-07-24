@@ -10,6 +10,7 @@ import GroceryItemForm from '../components/GroceryItemForm';
 import GroceryItemRow from '../components/GroceryItemRow';
 import type { GroceryItemFormValues } from '../components/GroceryItemForm';
 import { useGroceryItems } from '../hooks/useGroceryItems';
+import { notifyOtherUser } from '../notify';
 
 const PRIORITIES_BY_ORDER: Priority[] = ['high', 'medium', 'low'];
 
@@ -59,6 +60,7 @@ function GroceriesPage({ currentUser }: GroceriesPageProps) {
 			addedBy: currentUser,
 			lastEditedBy: currentUser,
 		});
+		void notifyOtherUser(currentUser, 'Bevás', `${currentUser} hozzáadta: ${values.name}`);
 		setIsAdding(false);
 	};
 
@@ -71,6 +73,9 @@ function GroceriesPage({ currentUser }: GroceriesPageProps) {
 		const item = items.find((item) => item.id === id);
 		if (!item) return;
 		editItem(id, { done: !item.done });
+		if (!item.done) {
+			void notifyOtherUser(currentUser, 'Bevás', `${currentUser} kipipálta: ${item.name}`);
+		}
 	};
 
 	const handleDeleteRequest = (id: string) => {
