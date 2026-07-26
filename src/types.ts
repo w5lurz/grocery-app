@@ -1,8 +1,18 @@
 export type User = 'Tamás' | 'Julcsi';
 
-export type Category = 'Tesco' | 'DM' | 'Fressnapf' | 'CBA' | 'Auchan' | 'OBI' | 'Kertészet';
+export type Category = 'Tesco' | 'DM' | 'Fressnapf' | 'CBA' | 'BioBolt' | 'Decathlon' | 'Auchan' | 'OBI' | 'Kertészet';
 
-export const CATEGORIES: Category[] = ['Tesco', 'DM', 'Fressnapf', 'CBA', 'Auchan', 'OBI', 'Kertészet'];
+export const CATEGORIES: Category[] = [
+	'Tesco',
+	'DM',
+	'Fressnapf',
+	'CBA',
+	'BioBolt',
+	'Decathlon',
+	'Auchan',
+	'OBI',
+	'Kertészet',
+];
 
 export type Priority = 'high' | 'medium' | 'low';
 
