@@ -1,5 +1,5 @@
 import { get, ref } from 'firebase/database';
-import { db } from './firebase';
+import { authReady, db } from './firebase';
 import type { User } from './types';
 
 const NOTIFY_URL = import.meta.env.VITE_NOTIFY_URL;
@@ -12,6 +12,7 @@ function otherUser(currentUser: User): User {
 export async function notifyOtherUser(currentUser: User, title: string, body: string) {
 	if (!NOTIFY_URL) return;
 
+	await authReady;
 	const snapshot = await get(ref(db, `fcmTokens/${otherUser(currentUser)}`));
 	const token = snapshot.val() as string | null;
 	if (!token) return;

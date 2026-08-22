@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getMessaging, getToken, isSupported } from 'firebase/messaging';
 import { ref, set } from 'firebase/database';
-import { app, db } from '../firebase';
+import { app, authReady, db } from '../firebase';
 import type { User } from '../types';
 
 async function registerToken(user: User) {
@@ -15,6 +15,7 @@ async function registerToken(user: User) {
 		serviceWorkerRegistration: registration,
 	});
 	if (token) {
+		await authReady;
 		await set(ref(db, `fcmTokens/${user}`), token);
 	}
 }
