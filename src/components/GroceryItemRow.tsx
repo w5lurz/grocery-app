@@ -19,6 +19,8 @@ const CATEGORY_TONES: Record<Category, BadgeTone> = {
 	DM: 'pink',
 	Fressnapf: 'orange',
 	CBA: 'red',
+	BioBolt: 'medium',
+	Decathlon: 'neutral',
 	Auchan: 'rose',
 	OBI: 'amber',
 	Kertészet: 'green',

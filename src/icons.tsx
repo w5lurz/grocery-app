@@ -12,6 +12,7 @@ import {
 	SunIcon,
 	HomeIcon,
 	TruckIcon,
+	TrophyIcon,
 } from '@heroicons/react/24/outline';
 import type { Category, Priority, TodoCategory } from './types';
 
@@ -31,6 +32,8 @@ export const CATEGORY_ICONS: Record<Category, ReactNode> = {
 	DM: <SparklesIcon />,
 	Fressnapf: <HeartIcon />,
 	CBA: <ShoppingBagIcon />,
+	BioBolt: leafIcon,
+	Decathlon: <TrophyIcon />,
 	Auchan: <BuildingStorefrontIcon />,
 	OBI: <WrenchScrewdriverIcon />,
 	Kertészet: <SunIcon />,
