@@ -1,10 +1,21 @@
 export type User = 'Tamás' | 'Julcsi';
 
-export type Category = 'Tesco' | 'DM' | 'Fressnapf' | 'CBA' | 'BioBolt' | 'Decathlon' | 'Auchan' | 'OBI' | 'Kertészet';
+export type Category =
+	| 'Tesco'
+	| 'DM'
+	| 'Gyogyó'
+	| 'Fressnapf'
+	| 'CBA'
+	| 'BioBolt'
+	| 'Decathlon'
+	| 'Auchan'
+	| 'OBI'
+	| 'Kertészet';
 
 export const CATEGORIES: Category[] = [
 	'Tesco',
 	'DM',
+	'Gyogyó',
 	'Fressnapf',
 	'CBA',
 	'BioBolt',
