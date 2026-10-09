@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -18,6 +18,4 @@ export const db = getDatabase(app);
 
 export const auth = getAuth(app);
 
-// Silent, UI-less sign-in so Realtime Database rules can require `auth != null`
-// without adding a login screen. Consumers await this before reading/writing.
-export const authReady = signInAnonymously(auth).then(() => undefined);
+export const authPersistenceReady = setPersistence(auth, browserLocalPersistence);

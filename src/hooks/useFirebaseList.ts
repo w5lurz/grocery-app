@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { onValue, ref, remove, set, update } from 'firebase/database';
-import { authReady, db } from '../firebase';
+import { db } from '../firebase';
 import { generateId } from '../utils';
 
 export function useFirebaseList<T extends { id: string }>(path: string) {
@@ -15,17 +15,13 @@ export function useFirebaseList<T extends { id: string }>(path: string) {
 	const [loading, setLoading] = useState(() => items.length === 0);
 
 	useEffect(() => {
-		let unsubscribe: (() => void) | undefined;
-
-		void authReady.then(() => {
-			const listRef = ref(db, path);
-			unsubscribe = onValue(listRef, (snapshot) => {
-				const value = snapshot.val() as Record<string, T> | null;
-				const nextItems = value ? Object.values(value) : [];
-				setItems(nextItems);
-				setLoading(false);
-				localStorage.setItem(cacheKey, JSON.stringify(nextItems));
-			});
+		const listRef = ref(db, path);
+		const unsubscribe = onValue(listRef, (snapshot) => {
+			const value = snapshot.val() as Record<string, T> | null;
+			const nextItems = value ? Object.values(value) : [];
+			setItems(nextItems);
+			setLoading(false);
+			localStorage.setItem(cacheKey, JSON.stringify(nextItems));
 		});
 
 		return () => unsubscribe?.();

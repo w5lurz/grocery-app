@@ -24,6 +24,7 @@ const CATEGORY_TONES: Record<Category, BadgeTone> = {
 	Auchan: 'rose',
 	OBI: 'amber',
 	Kertészet: 'green',
+	Gyogyó: 'green',
 };
 
 function GroceryItemRow({ item, onToggleDone, onEdit, onDelete }: GroceryItemRowProps) {
