@@ -37,6 +37,7 @@ export const CATEGORY_ICONS: Record<Category, ReactNode> = {
 	Auchan: <BuildingStorefrontIcon />,
 	OBI: <WrenchScrewdriverIcon />,
 	Kertészet: <SunIcon />,
+	Gyogyó: <HomeIcon />,
 };
 
 export const PRIORITY_ICONS: Record<Priority, ReactNode> = {

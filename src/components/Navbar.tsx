@@ -1,30 +1,28 @@
-import { Bars3Icon } from '@heroicons/react/24/outline';
+import { ArrowRightStartOnRectangleIcon, Bars3Icon } from '@heroicons/react/24/outline';
 import type { Page, User } from '../types';
 import { PAGES } from '../types';
+import Button from './Button';
 import MenuItem from './MenuItem';
-import Chip from './Chip';
 import ThemeToggle from './ThemeToggle';
 import NotificationToggle from './NotificationToggle';
 import DropdownMenu from './DropdownMenu';
 
 type NavbarProps = {
 	currentUser: User;
-	onUserChange: (user: User) => void;
 	activePage: Page;
 	onPageChange: (page: Page) => void;
+	onSignOut: () => void;
 	isDark: boolean;
 	onThemeToggle: () => void;
 	notificationPermission: NotificationPermission;
 	onRequestNotifications: () => void;
 };
 
-const USERS: User[] = ['Julcsi', 'Tamás'];
-
 function Navbar({
 	currentUser,
-	onUserChange,
 	activePage,
 	onPageChange,
+	onSignOut,
 	isDark,
 	onThemeToggle,
 	notificationPermission,
@@ -55,9 +53,12 @@ function Navbar({
 				</div>
 			</div>
 			<div className="flex items-center gap-3">
-				{USERS.map((user) => (
-					<Chip key={user} label={user} selected={currentUser === user} onClick={() => onUserChange(user)} />
-				))}
+				<span className="rounded-full border border-purple-600 bg-purple-600 px-3 py-1 text-sm font-medium text-white">
+					{currentUser}
+				</span>
+				<Button variant="icon" onClick={onSignOut} aria-label="Kijelentkezés" title="Kijelentkezés">
+					<ArrowRightStartOnRectangleIcon className="h-5 w-5" />
+				</Button>
 				<NotificationToggle permission={notificationPermission} onRequest={onRequestNotifications} />
 				<ThemeToggle isDark={isDark} onToggle={onThemeToggle} />
 			</div>
